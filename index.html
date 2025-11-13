@@ -25,13 +25,22 @@ body { box-sizing: border-box; font-family: system-ui,-apple-system,"メイリ�
 .schedule-content { font-size:15px; line-height:1.6; color:#555; }
 .change-item { margin:8px 0; padding:8px 12px; background:white; border-radius:8px; border-left:3px solid #f5576c; }
 .uploader { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:30px; }
+/* --- ギャラリーのレスポンシブ対応 --- */
 #gallery {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* iPhoneで3列固定 */
+  grid-template-columns: repeat(3, 1fr); /* 通常は3列 */
   gap: 10px;
   justify-items: center;
   margin-top: 20px;
 }
+
+/* iPhoneなど画面幅が狭い端末では2列にする */
+@media (max-width: 480px) {
+  #gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 
 .card {
   width: 110px;       /* 固定幅 */
