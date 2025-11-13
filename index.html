@@ -25,26 +25,24 @@ body { box-sizing: border-box; font-family: system-ui,-apple-system,"メイリ�
 .schedule-content { font-size:15px; line-height:1.6; color:#555; }
 .change-item { margin:8px 0; padding:8px 12px; background:white; border-radius:8px; border-left:3px solid #f5576c; }
 .uploader { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:30px; }
+
 /* --- ギャラリーのレスポンシブ対応 --- */
 #gallery {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 通常は3列 */
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   justify-items: center;
   margin-top: 20px;
 }
-
-/* iPhoneなど画面幅が狭い端末では2列にする */
 @media (max-width: 480px) {
   #gallery {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-
 .card {
-  width: 110px;       /* 固定幅 */
-  height: 150px;      /* 固定高さ */
+  width: 110px;
+  height: 150px;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 6px;
@@ -53,14 +51,12 @@ body { box-sizing: border-box; font-family: system-ui,-apple-system,"メイリ�
   position: relative;
   transition: transform 0.2s;
 }
-
 .card img {
-  width: 100px;       /* 固定サイズ */
-  height: 100px;      /* 正方形で統一 */
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 6px;
 }
-
 .meta {
   font-size: 11px;
   color: #555;
@@ -68,15 +64,36 @@ body { box-sizing: border-box; font-family: system-ui,-apple-system,"メイリ�
   text-align: center;
   white-space: pre-line;
 }
-.card { border:1px solid #ddd; border-radius:8px; padding:8px; background:white; cursor:pointer; position:relative; transition:transform 0.2s; }
 .card:hover { transform:scale(1.05); }
-.card img { width:100%; height:140px; object-fit:cover; border-radius:6px; }
-.meta { font-size:12px; color:#555; margin-top:6px; white-space:pre-line; }
 .delete-btn { position:absolute; top:6px; right:6px; background:red; color:white; border:none; border-radius:4px; padding:2px 6px; font-size:12px; cursor:pointer; }
 #modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:9999; }
 #modal img { max-width:90%; max-height:90%; border-radius:10px; }
 #status { font-size:13px; color:#333; margin-top:5px; }
 button { cursor:pointer; padding:8px 12px; border-radius:6px; border:1px solid #bbb; background:#f7f7f7; }
+
+/* --- なぞると光るエリア --- */
+#drawArea {
+  margin: 20px 0;
+  width: 100%;
+  height: 300px;
+  background: black;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+}
+.spark {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.8;
+  animation: fadeOut 1s forwards;
+}
+@keyframes fadeOut {
+  to { opacity: 0; transform: scale(2); }
+}
 </style>
 </head>
 <body>
@@ -111,11 +128,13 @@ button { cursor:pointer; padding:8px 12px; border-radius:6px; border:1px solid #
     </div>
   </div>
 
+  <!-- ★ なぞると光るエリアを追加（ここに光が出る） -->
+  <div id="drawArea"></div>
+
   <section>
     <h2>画廊SHION</h2>
     <div id="gallery"></div>
   </section>
-
 
   <section class="uploader">
     <label>投稿者名（必須）<br><input id="username" type="text" placeholder=""></label>
@@ -130,12 +149,10 @@ button { cursor:pointer; padding:8px 12px; border-radius:6px; border:1px solid #
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
-
 </main>
 
-
 <script>
-// スケジュール・おみくじ
+// ===== スケジュール・おみくじ機能 =====
 const scheduleData = {
   'today': { date: '本日', content:  '<div class="change-item">趣味は勉強、特技はテスト</div>' },
   'tomorrow': { date: '明日', content: '<div class="change-item">試験直前の土曜日を有効活用</div>' },
@@ -192,7 +209,7 @@ function showSchedule(key){
   d.classList.add('show');
 }
 
-// Firebase初期化
+// ===== Firebase初期化 =====
 const firebaseConfig = {
   apiKey: "AIzaSyCzDqI2YaOLoU4muurvvxBs4fOOSkH8Yew",
   authDomain: "image-share-89916.firebaseapp.com",
@@ -213,7 +230,7 @@ const gallery = document.getElementById("gallery");
 const modal = document.getElementById("modal");
 const modalImg = document.getElementById("modalImg");
 
-// アップロード
+// ===== FireStorage画像アップロード =====
 uploadBtn.addEventListener("click", async ()=>{
   const name=usernameInput.value.trim();
   const file=fileInput.files[0];
@@ -231,7 +248,7 @@ uploadBtn.addEventListener("click", async ()=>{
   finally{ uploadBtn.disabled=false; }
 });
 
-// ギャラリー更新（削除ボタン付き）
+// ===== ギャラリー更新 =====
 db.collection("test-images").onSnapshot(snapshot=>{
   gallery.innerHTML="";
   snapshot.forEach(doc=>{
@@ -249,11 +266,10 @@ db.collection("test-images").onSnapshot(snapshot=>{
     metaDiv.textContent = `${data.username}\n${new Date(data.updatedAt.seconds*1000).toLocaleString()}`;
     div.appendChild(metaDiv);
 
-    // Fire Storageに存在するかチェック
+    // FireStorageに存在するかチェック
     storage.ref("test-images/"+data.username+".jpg").getMetadata()
-      .then(()=>{/* 画像存在 → 削除ボタンなし */})
+      .then(()=>{})
       .catch(()=>{
-        // Storageにない場合のみ削除ボタン追加
         const delBtn = document.createElement("button");
         delBtn.className="delete-btn";
         delBtn.textContent="削除";
@@ -272,12 +288,24 @@ db.collection("test-images").onSnapshot(snapshot=>{
       });
 
     imgEl.addEventListener("click", ()=>{ modalImg.src=data.url; modal.style.display="flex"; });
-
     gallery.appendChild(div);
   });
 });
 
 modal.addEventListener("click", ()=>{ modal.style.display="none"; modalImg.src=""; });
+
+// ===== 光る描画機能 =====
+const drawArea = document.getElementById("drawArea");
+drawArea.addEventListener("pointermove", (e)=>{
+  const spark = document.createElement("div");
+  spark.className = "spark";
+  const hue = Math.floor(Math.random()*360);
+  spark.style.background = `hsl(${hue}, 100%, 60%)`;
+  spark.style.left = (e.offsetX-10)+"px";
+  spark.style.top = (e.offsetY-10)+"px";
+  drawArea.appendChild(spark);
+  setTimeout(()=>spark.remove(),1000);
+});
 </script>
 </body>
 </html>
