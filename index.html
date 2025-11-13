@@ -1,56 +1,103 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>クラス連絡アプリ</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>クラス連絡＋画像共有アプリ</title>
 <style>
-body { box-sizing: border-box; font-family: system-ui,-apple-system,"メイリオ",sans-serif; margin:0; padding:20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:#333; }
-.container { max-width:900px; margin:0 auto; background:white; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.2); overflow:hidden; padding:20px; }
-.header { background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%); color:white; padding:30px 20px; text-align:center; border-radius: 16px; margin-bottom: 20px; }
+body {
+  box-sizing: border-box;
+  font-family: system-ui,-apple-system,"メイリオ",sans-serif;
+  margin:0; padding:20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color:#333;
+}
+.container {
+  max-width:900px; margin:0 auto; background:white; border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2); overflow:hidden; padding:20px;
+}
+.header {
+  background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+  color:white; padding:30px 20px; text-align:center;
+  border-radius:16px; margin-bottom:20px;
+}
 .header h1 { margin:0; font-size:24px; }
 .bible-text { margin-top:8px; color:black; font-size:16px; line-height:1.5; }
 .main-content { display:flex; flex-wrap:wrap; }
+
+/* ===== 日程ボタン ===== */
 .date-buttons { padding:20px; display:grid; gap:12px; flex:1; border-right:2px solid #e1e8ff; min-width:260px; }
 .date-row { display:flex; gap:8px; align-items:center; }
-.date-row.horizontal { display:flex; flex-wrap: wrap; justify-content: space-between; margin-bottom:8px; }
-.date-button, .omikuji-button { flex:1; margin:2px; }
-.omikuji-button { background: linear-gradient(45deg,#ff9500 0%,#ff6a00 100%); color:white; border:none; padding:16px 20px; border-radius:12px; font-size:16px; font-weight:500; cursor:pointer; box-shadow:0 4px 15px rgba(255,149,0,0.3); text-align:center; }
-.omikuji-button:hover { transform: translateY(-2px); box-shadow:0 6px 20px rgba(255,149,0,0.4); }
-.omikuji-result { margin-top:8px; padding:10px; background:#fff7e6; border-radius:8px; border-left:4px solid #ff9500; font-size:14px; text-align:center; display:none; }
-.schedule-display { flex:1; margin:20px; padding:20px; background:#f8f9ff; border-radius:12px; border-left:4px solid #4facfe; display:none; animation:fadeIn 0.3s ease; }
+.date-row.horizontal { display:flex; flex-wrap:wrap; justify-content: space-between; margin-bottom:8px; }
+.date-button, .omikuji-button {
+  flex:1; margin:2px;
+  border:none; border-radius:12px;
+  font-size:16px; font-weight:500; cursor:pointer;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2); text-align:center; padding:12px;
+}
+.omikuji-button {
+  background: linear-gradient(45deg,#ff9500 0%,#ff6a00 100%); color:white;
+}
+.omikuji-button:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(255,149,0,0.4); }
+.omikuji-result {
+  margin-top:8px; padding:10px; background:#fff7e6;
+  border-radius:8px; border-left:4px solid #ff9500;
+  font-size:14px; text-align:center; display:none;
+}
+
+/* ===== スケジュール ===== */
+.schedule-display { flex:1; margin:20px; padding:20px; background:#f8f9ff;
+  border-radius:12px; border-left:4px solid #4facfe; display:none; animation:fadeIn 0.3s ease;
+}
 .schedule-display.show { display:block; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
 .schedule-date { font-size:18px; font-weight:600; color:#4facfe; margin-bottom:15px; padding-bottom:8px; border-bottom:2px solid #e1e8ff; }
 .schedule-content { font-size:15px; line-height:1.6; color:#555; }
 .change-item { margin:8px 0; padding:8px 12px; background:white; border-radius:8px; border-left:3px solid #f5576c; }
 
-/* --- なぞると光るエリア --- */
+/* ===== なぞると光るエリア ===== */
 #drawArea {
-  margin: 20px 0;
-  width: 100%;
-  height: 300px;
-  background: black;
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-  touch-action: none;
+  margin: 20px 0; width: 100%; height: 300px; background: black;
+  border-radius: 12px; position: relative; overflow: hidden; touch-action: none;
 }
 .spark {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0.8;
-  animation: fadeOut 1s forwards;
+  position: absolute; width: 20px; height: 20px; border-radius: 50%;
+  pointer-events: none; opacity: 0.8; animation: fadeOut 1s forwards;
 }
-@keyframes fadeOut {
-  to { opacity: 0; transform: scale(2); }
+@keyframes fadeOut { to { opacity: 0; transform: scale(2); } }
+
+/* ===== ギャラリー ===== */
+#gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 200px;
+  gap: 10px;
+  justify-items: center;
+  margin-top: 10px;
 }
+@media (max-width: 480px) {
+  #gallery { grid-template-columns: repeat(2, 1fr); }
+}
+.card {
+  width: 110px; height: 150px; border: 1px solid #ddd; border-radius: 8px;
+  padding: 4px; background: white; cursor: pointer;
+  display:flex; flex-direction: column; justify-content: flex-start; align-items: center;
+}
+.card img { width: 100%; height: 100px; object-fit: cover; border-radius: 6px; transition: transform 0.3s; }
+.card img:hover{ transform: scale(1.05);}
+.meta{ font-size:12px; color:#555; margin-top:4px; text-align:center; white-space:pre-line;}
+.delete-btn{ position:absolute; top:6px; right:6px; background:red; color:white; border:none; border-radius:4px; padding:2px 6px; font-size:12px; cursor:pointer;}
+.upload-row{ display:flex; gap:6px; align-items:center; margin-top:4px; }
+button{ cursor:pointer; padding:4px 10px; border-radius:6px; border:1px solid #bbb; background:#f7f7f7; }
+#overlay{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:none; justify-content:center; align-items:center; z-index:1000;}
+#overlay img{ max-width:90%; max-height:90%; border-radius:8px; cursor:pointer;}
+.auth input{ margin-bottom:4px; display:block; padding:4px 6px;}
+.auth-row{ display:flex; gap:10px; align-items:flex-end; margin-bottom:4px; }
+.auth-row input{ flex:1; }
 </style>
 </head>
 <body>
+
 <main class="container">
   <header class="header">
     <h1>11月14日（金）</h1>
@@ -82,20 +129,55 @@ body { box-sizing: border-box; font-family: system-ui,-apple-system,"メイリ�
     </div>
   </div>
 
-  <!-- ★ なぞると光るエリア -->
+  <!-- 光る描画エリア -->
   <div id="drawArea"></div>
+
+  <!-- ギャラリー -->
+  <section>
+    <h2>画廊SHION</h2>
+    <div id="gallery"></div>
+    <div class="upload-row">
+      <input id="fileInput" type="file" accept="image/*">
+      <button id="uploadBtn">アップロード</button>
+      <span id="status"></span>
+    </div>
+  </section>
+
+  <!-- 認証 -->
+  <section class="auth">
+    <h2>アカウント</h2>
+    <div id="authStatus">未ログイン</div>
+    <div class="auth-row">
+      <input id="email" type="email" placeholder="メールアドレス">
+      <input id="password" type="password" placeholder="パスワード">
+    </div>
+    <div class="auth-row">
+      <button id="registerBtn">新規登録</button>
+      <button id="loginBtn">ログイン</button>
+      <button id="logoutBtn" style="display:none;">ログアウト</button>
+    </div>
+    <input id="displayName" type="text" placeholder="新規登録時のみ入力">
+  </section>
 </main>
 
+<div id="overlay"><img id="overlayImg" src=""></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
 <script>
-// ===== スケジュール・おみくじ機能 =====
+// ===== スケジュール・おみくじ =====
 const scheduleData = {
-  'today': { date: '本日', content:  '<div class="change-item">趣味は勉強、特技はテスト</div>' },
+  'today': { date: '本日', content: '<div class="change-item">趣味は勉強、特技はテスト</div>' },
   'tomorrow': { date: '明日', content: '<div class="change-item">試験直前の土曜日を有効活用</div>' },
   'following': { date: '明後日', content: '<div class="change-item">試験直前の日曜日を有効活用</div>' },
-  'test1': { date: '11月18日（火）', content:  '<div class="change-item">1限：論理国語</div><div class="change-item">2限：化学</div>' },
-  'test2': { date: '11月19日（水）', content:  '<div class="change-item">1限：公共</div><div class="change-item">2限：論理・表現Ⅱ</div><div class="change-item">3限：地理探究</div>' },
-  'test3': { date: '11月20日（木）', content:  '<div class="change-item">1限：古典探究</div><div class="change-item">2限：英語CⅡ</div>' },
-  'test4': { date: '11月21日（金）', content:  '<div class="change-item">1限：物理/生物</div><div class="change-item">2限：数学ⅡB</div>' }
+  'test1': { date: '11月18日（火）', content: '<div class="change-item">1限：論理国語</div><div class="change-item">2限：化学</div>' },
+  'test2': { date: '11月19日（水）', content: '<div class="change-item">1限：公共</div><div class="change-item">2限：論理・表現Ⅱ</div><div class="change-item">3限：地理探究</div>' },
+  'test3': { date: '11月20日（木）', content: '<div class="change-item">1限：古典探究</div><div class="change-item">2限：英語CⅡ</div>' },
+  'test4': { date: '11月21日（金）', content: '<div class="change-item">1限：物理/生物</div><div class="change-item">2限：数学ⅡB</div>' }
 };
 
 const omikujiResults = [
@@ -107,56 +189,132 @@ const omikujiResults = [
   {name:'大吉',text:'萩谷と睨めっこ'}
 ];
 
-function getTodayKey(){ const today=new Date(); return today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(); }
-function getDrawCount(){ const key=getTodayKey(); const data=JSON.parse(localStorage.getItem('omikujiCount'))||{}; return data[key]||0; }
-function incrementDrawCount(){ const key=getTodayKey(); const data=JSON.parse(localStorage.getItem('omikujiCount'))||{}; data[key]=(data[key]||0)+1; localStorage.setItem('omikujiCount',JSON.stringify(data)); }
-function getSecondResult(){ const key=getTodayKey()+'-secondResult'; return JSON.parse(localStorage.getItem(key)); }
-function setSecondResult(result){ const key=getTodayKey()+'-secondResult'; localStorage.setItem(key,JSON.stringify(result)); }
+function getTodayKey(){ const t=new Date(); return t.getFullYear()+"-"+(t.getMonth()+1)+"-"+t.getDate(); }
+function getDrawCount(){ const k=getTodayKey(); const d=JSON.parse(localStorage.getItem("omikujiCount"))||{}; return d[k]||0; }
+function incrementDrawCount(){ const k=getTodayKey(); const d=JSON.parse(localStorage.getItem("omikujiCount"))||{}; d[k]=(d[k]||0)+1; localStorage.setItem("omikujiCount",JSON.stringify(d)); }
+function getSecondResult(){ return JSON.parse(localStorage.getItem(getTodayKey()+"-secondResult")); }
+function setSecondResult(r){ localStorage.setItem(getTodayKey()+"-secondResult",JSON.stringify(r)); }
 
 function drawOmikuji(){
-  const count = getDrawCount();
-  const resultBox = document.getElementById('omikujiResult');
-  resultBox.style.display='block';
-  if(count===0){
+  const count=getDrawCount();
+  const box=document.getElementById("omikujiResult");
+  box.style.display="block";
+  if(count===0||count===1){
     const r=Math.floor(Math.random()*omikujiResults.length);
-    const result=omikujiResults[r];
-    resultBox.innerHTML=`今日の運勢：<strong>${result.name}</strong><br>${result.text}`;
+    const res=omikujiResults[r];
+    if(count===1) setSecondResult(res);
     incrementDrawCount();
-  } else if(count===1){
-    const r=Math.floor(Math.random()*omikujiResults.length);
-    const result=omikujiResults[r];
-    setSecondResult(result);
-    resultBox.innerHTML=`今日の運勢：<strong>${result.name}</strong><br>${result.text}`;
-    incrementDrawCount();
-  } else {
+    box.innerHTML=`今日の運勢：<strong>${res.name}</strong><br>${res.text}`;
+  }else{
     const saved=getSecondResult();
-    if(saved){ resultBox.innerHTML=`今日の運勢：<strong>${saved.name}</strong><br>${saved.text}`; }
-    else{ resultBox.innerHTML="（2回目の結果がありません）"; }
+    box.innerHTML=saved?`今日の運勢：<strong>${saved.name}</strong><br>${saved.text}`:"（2回目の結果がありません）";
   }
 }
 
-function showSchedule(key){
-  const d=document.getElementById('scheduleDisplay');
-  const dd=document.getElementById('scheduleDate');
-  const c=document.getElementById('scheduleContent');
-  dd.textContent=scheduleData[key].date;
-  c.innerHTML=scheduleData[key].content;
-  d.classList.add('show');
+function showSchedule(k){
+  const d=document.getElementById("scheduleDisplay");
+  document.getElementById("scheduleDate").textContent=scheduleData[k].date;
+  document.getElementById("scheduleContent").innerHTML=scheduleData[k].content;
+  d.classList.add("show");
 }
 
-// ===== 光る描画機能 =====
-const drawArea = document.getElementById("drawArea");
-drawArea.addEventListener("pointermove", (e)=>{
-  const spark = document.createElement("div");
-  spark.className = "spark";
-  const hue = Math.floor(Math.random()*360);
-  spark.style.background = `hsl(${hue}, 100%, 60%)`;
-  spark.style.left = (e.offsetX-10)+"px";
-  spark.style.top = (e.offsetY-10)+"px";
-  drawArea.appendChild(spark);
-  setTimeout(()=>spark.remove(),1000);
+// ===== 光る描画 =====
+const drawArea=document.getElementById("drawArea");
+drawArea.addEventListener("pointermove", e=>{
+  const s=document.createElement("div");
+  s.className="spark";
+  const hue=Math.floor(Math.random()*360);
+  s.style.background=`hsl(${hue},100%,60%)`;
+  s.style.left=(e.offsetX-10)+"px";
+  s.style.top=(e.offsetY-10)+"px";
+  drawArea.appendChild(s);
+  setTimeout(()=>s.remove(),1000);
 });
+
+// ===== Firebase 画像共有 =====
+const firebaseConfig = {
+  apiKey: "AIzaSyCzDqI2YaOLoU4muurvvxBs4fOOSkH8Yew",
+  authDomain: "image-share-89916.firebaseapp.com",
+  projectId: "image-share-89916",
+  storageBucket: "image-share-89916.firebasestorage.app",
+  messagingSenderId: "859639070035",
+  appId: "1:859639070035:web:aab7543659c3d1a877f5a6"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(), db=firebase.firestore(), storage=firebase.storage();
+
+const email=document.getElementById("email"), pass=document.getElementById("password"),
+nameField=document.getElementById("displayName"), reg=document.getElementById("registerBtn"),
+login=document.getElementById("loginBtn"), logout=document.getElementById("logoutBtn"),
+authStatus=document.getElementById("authStatus"), fileInput=document.getElementById("fileInput"),
+upload=document.getElementById("uploadBtn"), status=document.getElementById("status"),
+gallery=document.getElementById("gallery"), overlay=document.getElementById("overlay"),
+overlayImg=document.getElementById("overlayImg");
+
+// --- 認証 ---
+reg.onclick=async()=>{
+  const emailV=email.value.trim(), passV=pass.value, nameV=nameField.value.trim();
+  if(!emailV||!passV||!nameV){alert("全て入力してください");return;}
+  try{
+    const u=await auth.createUserWithEmailAndPassword(emailV,passV);
+    await u.user.updateProfile({displayName:nameV});
+    await u.user.sendEmailVerification();
+    alert("確認メールを送信しました。メールを確認してください。");
+  }catch(e){alert(e.message);}
+};
+
+login.onclick=async()=>{
+  const emailV=email.value.trim(), passV=pass.value;
+  if(!emailV||!passV){alert("メール・パスワードを入力してください");return;}
+  try{
+    const u=await auth.signInWithEmailAndPassword(emailV,passV);
+    if(!u.user.emailVerified){alert("メール認証が完了していません。");await auth.signOut();return;}
+    authStatus.textContent=`ログイン: ${u.user.displayName}`;
+    logout.style.display="inline-block";
+    reg.style.display=login.style.display="none";
+  }catch(e){alert(e.message);}
+};
+
+logout.onclick=async()=>{
+  await auth.signOut();
+  authStatus.textContent="未ログイン";
+  logout.style.display="none";
+  reg.style.display=login.style.display="inline-block";
+};
+
+// --- アップロード ---
+upload.onclick=async()=>{
+  const user=auth.currentUser;
+  if(!user||!user.emailVerified){status.textContent="ログインしてメール認証を完了してください";return;}
+  const file=fileInput.files[0];
+  if(!file){status.textContent="画像を選択してください";return;}
+  upload.disabled=true; status.textContent="アップロード中...";
+  try{
+    const ref=storage.ref("test-images/"+user.uid);
+    await ref.put(file);
+    const url=await ref.getDownloadURL();
+    await db.collection("test-images").doc(user.uid).set({
+      username:user.displayName, url, updatedAt:new Date()
+    });
+    status.textContent="アップロード完了！";
+    fileInput.value="";
+  }catch(e){console.error(e);status.textContent="アップロード失敗";}
+  finally{upload.disabled=false;}
+};
+
+// --- ギャラリー ---
+db.collection("test-images").onSnapshot(snap=>{
+  gallery.innerHTML="";
+  snap.forEach(doc=>{
+    const d=doc.data(), id=doc.id;
+    const div=document.createElement("div"); div.className="card"; div.id=id;
+    const img=document.createElement("img"); img.src=d.url; div.appendChild(img);
+    const meta=document.createElement("div"); meta.className="meta"; meta.textContent=`${d.username}\n${new Date(d.updatedAt.seconds*1000).toLocaleString()}`; div.appendChild(meta);
+    img.onclick=()=>{overlayImg.src=d.url;overlay.style.display="flex";};
+    gallery.appendChild(div);
+  });
+});
+overlay.onclick=()=>{overlay.style.display="none";overlayImg.src="";};
 </script>
 </body>
 </html>
-
