@@ -164,20 +164,26 @@ button{ cursor:pointer; padding:4px 10px; border-radius:6px; border:1px solid #b
   </section>
 
   <!-- 認証 -->
-  <section class="auth">
-    <h2>アカウント</h2>
-    <div id="authStatus">未ログイン</div>
-    <div class="auth-row">
-      <input id="email" type="email" placeholder="メールアドレス">
-      <input id="password" type="password" placeholder="パスワード：6桁以上">
-    </div>
-    <div class="auth-row">
-      <button id="registerBtn">新規登録</button>
-      <button id="loginBtn">ログイン</button>
-      <button id="logoutBtn" style="display:none;">ログアウト</button>
-    </div>
-    <input id="displayName" type="text" placeholder="ユーザー名：新規登録時のみ入力">
-  </section>
+  <!-- アカウント -->
+<section class="auth">
+  <h3>アカウント</h3>
+  <div id="authStatus"></div>
+
+  <div class="auth-row">
+    <input id="email" type="email" placeholder="icj210××× / ich240×××@s.icc.ac.jp">
+    <input id="password" type="password" placeholder="パスワード：情報教室">
+  </div>
+
+  <div class="auth-row">
+    <button id="registerBtn">新規登録</button>
+    <button id="loginBtn">ログイン</button>
+<label>本校2年生は新規登録は不要です。<br>
+    <button id="logoutBtn" style="display:none;">ログアウト</button>
+  </div>
+  <label>投稿者名（表示用 / 新規登録時のみ入力）<br>
+    <input id="displayName" type="text" placeholder="新規登録時のみ入力">
+  </label>
+</section>
 </main>
 
 <div id="overlay"><img id="overlayImg" src=""></div>
@@ -319,4 +325,3 @@ overlay.onclick=()=>{overlay.style.display="none";overlayImg.src="";};
 </script>
 </body>
 </html>
-
