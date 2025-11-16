@@ -36,15 +36,70 @@ button { cursor: pointer; padding: 6px 10px; border-radius: 6px; border: 1px sol
 .auth-header { display: flex; align-items: center; gap: 8px; }
 .auth-row { display: flex; gap: 10px; margin-top: 8px; }
 .auth-row input { padding: 6px 8px; border-radius: 6px; border: 1px solid #ddd; }
-#authStatus { font-size: 14px; color: #333; margin-left:8px; }
-.omikuji-result { margin-top:8px; padding:10px; background:#fff7e6; border-radius:8px; border-left:4px solid #ff9500; font-size:14px; text-align:center; display:none; }
-.schedule-display { margin-top:10px; padding:10px; background:#f0f0f0; border-left:4px solid #4facfe; border-radius:6px; display:none; }
+
+/* ---- おみくじ結果、スケジュール ---- */
+.omikuji-result { 
+  margin-top:8px; padding:10px; background:#fff7e6;
+  border-radius:8px; border-left:4px solid #ff9500;
+  font-size:14px; text-align:center; display:none;
+}
+.schedule-display { 
+  margin-top:10px; padding:10px; background:#f0f0f0; 
+  border-left:4px solid #4facfe; border-radius:6px; display:none; 
+}
 .schedule-date { font-weight:600; color:#4facfe; margin-bottom:4px; }
 .schedule-content { font-size:14px; color:#333; }
+
 .date-buttons { margin-top:10px; display:flex; flex-wrap:wrap; gap:6px; }
-.date-button, .omikuji-button { padding:6px 10px; border-radius:6px; border:1px solid #bbb; background:#f7f7f7; cursor:pointer; }
+
+/* ================================
+   ✨ 華やかなボタンスタイル
+   ================================ */
+/* --- 華やかなボタンスタイル（色を少し濃く） --- */
+.fancy-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* 日付ボタン（青 → 濃く） */
+.fancy-blue {
+  background: linear-gradient(135deg, #5ed4ff 0%, #3e7bff 100%);
+  box-shadow: 0 4px 10px rgba(62, 123, 255, 0.45);
+}
+
+.fancy-blue:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 14px rgba(62, 123, 255, 0.65);
+}
+
+.fancy-blue:active {
+  transform: scale(0.97);
+}
+
+/* おみくじボタン（黄金 → 濃く） */
+.fancy-gold {
+  background: linear-gradient(135deg, #f5c242 0%, #f48c3e 100%);
+  box-shadow: 0 4px 10px rgba(244, 140, 62, 0.45);
+}
+
+.fancy-gold:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 14px rgba(244, 140, 62, 0.65);
+}
+
+.fancy-gold:active {
+  transform: scale(0.97);
+}
+
 </style>
 </head>
+
 <body>
 
 <header>
@@ -52,26 +107,28 @@ button { cursor: pointer; padding: 6px 10px; border-radius: 6px; border: 1px sol
   <div id="status" style="margin-left:auto"></div>
 </header>
 
-<!-- おみくじ -->
+<!-- --- おみくじ --- -->
 <div class="date-buttons">
-  <button class="omikuji-button" onclick="drawOmikuji()">おみくじ 1日2回</button>
+  <button class="omikuji-button fancy-btn fancy-gold" onclick="drawOmikuji()">🎯 おみくじ 1日2回</button>
 </div>
 <div id="omikujiResult" class="omikuji-result"></div>
 
-<!-- スケジュール -->
+<!-- --- スケジュール --- -->
 <div class="date-buttons">
-  <button class="date-button" onclick="showSchedule('today')">本日</button>
-  <button class="date-button" onclick="showSchedule('tomorrow')">明日</button>
-  <button class="date-button" onclick="showSchedule('following')">明後日</button>
-  <button class="date-button" onclick="showSchedule('test3')">11月20日（木）</button>
-  <button class="date-button" onclick="showSchedule('test4')">11月21日（金）</button>
+  <button class="date-button fancy-btn fancy-blue" onclick="showSchedule('today')">本日</button>
+  <button class="date-button fancy-btn fancy-blue" onclick="showSchedule('tomorrow')">11/18（火）</button>
+  <button class="date-button fancy-btn fancy-blue" onclick="showSchedule('following')">11/19（水）</button>
+  <button class="date-button fancy-btn fancy-blue" onclick="showSchedule('test3')">11/20（木）</button>
+  <button class="date-button fancy-btn fancy-blue" onclick="showSchedule('test4')">11/21（金）</button>
+ <button class="date-button fancy-btn fancy-blue" onclick="showSchedule('test5')">試験上の注意</button>
 </div>
+
 <div id="scheduleDisplay" class="schedule-display">
   <div id="scheduleDate" class="schedule-date"></div>
   <div id="scheduleContent" class="schedule-content"></div>
 </div>
 
-<!-- Webページ表示エリア -->
+<!-- Webページ -->
 <div id="drawArea">
   <iframe src="https://incict-design.github.io/spelling/" allowfullscreen style="width:100%;height:300px;border:none;border-radius:6px;margin-top:10px;"></iframe>
 </div>
@@ -105,9 +162,7 @@ button { cursor: pointer; padding: 6px 10px; border-radius: 6px; border: 1px sol
   </div>
 </section>
 
-<div id="overlay">
-  <img id="overlayImg" src="">
-</div>
+<div id="overlay"><img id="overlayImg" src=""></div>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -119,11 +174,13 @@ button { cursor: pointer; padding: 6px 10px; border-radius: 6px; border: 1px sol
 // ===== おみくじ・スケジュール =====
 const scheduleData = {
   'today': { date: '本日', content: '<div>趣味は勉強、特技はテスト</div>' },
-  'tomorrow': { date: '明日', content: '<div>1限：論理国語</div><div>2限：文：生物基礎 / 理：化学</div>' },
-  'following': { date: '明後日', content: '<div>1限：公共</div><div>2限：論理・表現Ⅱ</div><div>3限：４組のみ：地理探究</div>' },
-  'test3': { date: '11月20日（木）', content: '<div>1限：古典探究</div><div>2限：英語CⅡ</div>' },
-  'test4': { date: '11月21日（金）', content: '<div>1限：文：世・日 / 理：物・生</div><div>2限：数学ⅡB</div>' }
+  'tomorrow': { date: '11/18（火）', content: '<div>1限：論理国語</div><div>2限：文：生物基礎 / 理：化学</div>' },
+  'following': { date: '11/19（水）', content: '<div>1限：公共</div><div>2限：論理・表現Ⅱ</div><div>3限：４組のみ：地理探究</div>' },
+  'test3': { date: '11/20（木）', content: '<div>1限：古典探究</div><div>2限：英語CⅡ</div>' },
+  'test4': { date: '11/21（金）', content: '<div>1限：文：世・日 / 理：物・生</div><div>2限：数学ⅡB</div>' },
+ 'test5': { date: '試験上の注意', content: '<div><div>【試験場の注意】①不正行為の厳禁 / ②物品貸借の禁止 / ③下敷の使用禁止 / ④膝掛使用禁止 / ⑤机上に置くのは、シャープペンシル・鉛筆と消しゴムのみ（ペンケースは置かない）。 / ⑥机の中には物を入れて置かない（聖書・讃美歌等も入れて置かない）。 / ⑦試験開始5分前には着席し、監督の先生を静かに待つ。 / ⑧試験は落ち着いた態度で受験し、誤解を招くことのないようにする。 / ⑨机上の落書きは消しておくこと。 / ⑩携帯電話(スマートウォッチ等インターネット機能付き電子機器を含む)は机の上や中に置いたり、ポケットに入れたりせず、必ず電源を切ってバッグの中に入れておく。 / ⑪カバンはファスナーを閉めて椅子の下に置き、カバンの中が見えないようにする。 / ⑫複数科目が同一時間にある場合は、科目ごとに座席を移動する。</div></div>' }
 };
+
 const omikujiResults = [
   {name:'大狂',text:'隕石注意'},
   {name:'凶',text:'水鉄砲で撃たれる'},
@@ -156,10 +213,9 @@ function drawOmikuji(){
 }
 
 function showSchedule(k){
-  const d=document.getElementById("scheduleDisplay");
   document.getElementById("scheduleDate").textContent=scheduleData[k].date;
   document.getElementById("scheduleContent").innerHTML=scheduleData[k].content;
-  d.style.display="block";
+  document.getElementById("scheduleDisplay").style.display="block";
 }
 
 // ===== Firebase 画像共有 =====
@@ -174,23 +230,29 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(), db=firebase.firestore(), storage=firebase.storage();
 
-const emailInput=document.getElementById("email"), passwordInput=document.getElementById("password"),
-loginBtn=document.getElementById("loginBtn"), logoutBtn=document.getElementById("logoutBtn"),
-authStatus=document.getElementById("authStatus"), fileInput=document.getElementById("fileInput"),
-uploadBtn=document.getElementById("uploadBtn"), status=document.getElementById("status"),
-gallery=document.getElementById("gallery"), overlay=document.getElementById("overlay"),
-overlayImg=document.getElementById("overlayImg"), selectBtn=document.getElementById("selectBtn");
+const emailInput=document.getElementById("email"),
+passwordInput=document.getElementById("password"),
+loginBtn=document.getElementById("loginBtn"),
+logoutBtn=document.getElementById("logoutBtn"),
+authStatus=document.getElementById("authStatus"),
+fileInput=document.getElementById("fileInput"),
+uploadBtn=document.getElementById("uploadBtn"),
+status=document.getElementById("status"),
+gallery=document.getElementById("gallery"),
+overlay=document.getElementById("overlay"),
+overlayImg=document.getElementById("overlayImg"),
+selectBtn=document.getElementById("selectBtn");
 
-let selectedFile = null;
+let selectedFile=null;
 
 // 認証状態変更
-auth.onAuthStateChanged(user => {
+auth.onAuthStateChanged(user=>{
   if(user){
-    authStatus.textContent = `ログイン中: ${user.displayName||user.email}`;
+    authStatus.textContent=`ログイン中: ${user.displayName||user.email}`;
     loginBtn.style.display="none";
     logoutBtn.style.display="inline-block";
   }else{
-    authStatus.textContent = "未ログイン";
+    authStatus.textContent="未ログイン";
     loginBtn.style.display="inline-block";
     logoutBtn.style.display="none";
   }
@@ -203,7 +265,11 @@ loginBtn.addEventListener("click",async()=>{
   if(!email||!pass){ alert("メールとパスワードを入力してください"); return;}
   try{
     const user = await auth.signInWithEmailAndPassword(email,pass);
-    if(!user.user.emailVerified){ alert("メール認証が完了していません"); await auth.signOut(); return;}
+    if(!user.user.emailVerified){
+      alert("メール認証が完了していません");
+      await auth.signOut();
+      return;
+    }
   }catch(e){ alert(e.message);}
 });
 
@@ -213,8 +279,8 @@ logoutBtn.addEventListener("click",()=>auth.signOut());
 // ファイル選択
 selectBtn.addEventListener('click',()=>fileInput.click());
 fileInput.addEventListener('change',()=>{
-  selectedFile = fileInput.files[0] || null;
-  status.textContent = selectedFile ? selectedFile.name : '';
+  selectedFile=fileInput.files[0]||null;
+  status.textContent=selectedFile?selectedFile.name:'';
 });
 
 // アップロード
@@ -244,13 +310,16 @@ db.collection("test-images").onSnapshot(snapshot=>{
   snapshot.forEach(doc=>{
     const data=doc.data();
     const div=document.createElement("div"); div.className="card";
-    const img=document.createElement("img"); img.src=data.url; div.appendChild(img);
-    const meta=document.createElement("div"); meta.className="meta"; meta.textContent=`${data.username}\n${new Date(data.updatedAt.seconds*1000).toLocaleString()}`; div.appendChild(meta);
-    img.onclick=()=>{overlayImg.src=data.url; overlay.style.display="flex";}
+    const img=document.createElement("img"); img.src=data.url;
+    div.appendChild(img);
+    const meta=document.createElement("div"); meta.className="meta";
+    meta.textContent=`${data.username}\n${new Date(data.updatedAt.seconds*1000).toLocaleString()}`;
+    div.appendChild(meta);
+    img.onclick=()=>{ overlayImg.src=data.url; overlay.style.display="flex"; }
     gallery.appendChild(div);
   });
 });
-overlay.onclick=()=>{overlay.style.display="none"; overlayImg.src="";}
+overlay.onclick=()=>{ overlay.style.display="none"; overlayImg.src=""; };
 </script>
 </body>
 </html>
